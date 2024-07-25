@@ -1,0 +1,11 @@
+1. in terminal 
+php artisan make:model Classes -m // create Model Classes
+php artisan make:model Section -m // create Model Section
+php artisan make:model Student -m // create Model Student
+
+2. in migration add fields
+
+3. in terminal
+php artisan make:factory ClassesFactory
+php artisan make:factory SectionFactory
+php artisan make:factory StudentFactory
