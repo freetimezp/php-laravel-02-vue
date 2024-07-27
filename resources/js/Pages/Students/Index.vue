@@ -1,5 +1,12 @@
 <script setup>
 import MagnifyingGlass from "@/Components/Icons/MagnifyingGlass.vue";
+
+defineProps({
+    students: {
+        type: Object,
+        required: true
+    }
+})
 </script>
 
 <template>
@@ -82,35 +89,36 @@ import MagnifyingGlass from "@/Components/Icons/MagnifyingGlass.vue";
                                             <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6" />
                                         </tr>
                                     </thead>
+
                                     <tbody class="divide-y divide-gray-200 bg-white">
-                                        <tr>
+                                        <tr v-for="student in students.data" :key="student.id">
                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium 
                                                 text-gray-900 sm:pl-6">
-                                                id
+                                                {{ student.id }}
                                             </td>
                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium 
                                                 text-gray-900 sm:pl-6">
-                                                name
+                                                {{ student.name }}
+                                            </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">                                                
+                                                {{ student.email }}
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                email
+                                                {{ student.class.name }}
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                class
+                                                {{ student.section.name }}
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                section
-                                            </td>
-                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                created_at_formatted
+                                                {{ student.created_at }}
                                             </td>
 
                                             <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm 
                                                     font-medium sm:pr-6">
-                                                <Link class="text-indigo-600 hover:text-indigo-900">
-                                                Edit
+                                                <Link class="text-indigo-600 inline hover:text-indigo-900">
+                                                    Edit
                                                 </Link>
-                                                <button class="ml-2 text-indigo-600 hover:text-indigo-900">
+                                                <button class="ml-2 text-indigo-600 inline hover:text-indigo-900">
                                                     Delete
                                                 </button>
                                             </td>

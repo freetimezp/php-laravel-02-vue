@@ -12,8 +12,10 @@ class StudentController extends Controller
     //
     public function index()
     {
-        //$students = StudentResource::collection(Student::all());
+        $students = StudentResource::collection(Student::all());
 
-        return inertia('Student/Index');
+        return inertia('Students/Index', [
+            'students' => $students,
+        ]);
     }
 }
