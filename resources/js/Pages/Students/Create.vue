@@ -1,13 +1,65 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
+import axios from '@/axios'; // Assuming you have an axios.js file as shown above
 
 defineProps({
-    classes: {
+    classes: {        
         type: Object,
-        required: true
     }
-})
+});
+
+const form = useForm({
+    name: '',
+    email: '',
+    class_id: '',
+    section_id: '',
+});
+
+const sections = ref([]);
+
+watch(
+    () => form.class_id, 
+    (newValue) => {
+        if (newValue) {
+            getSections(newValue);
+        } else {
+            sections.value = [];
+        }
+    }
+);
+
+const getSections = async (class_id) => {
+    try {
+        const response = await axios.get(`/api/sections?class_id=${class_id}`);
+        sections.value = response.data;
+        //console.log(sections);
+    } catch (error) {
+        console.log(error.message);
+        if (error.response) {
+            // The request was made, and the server responded with a status code that falls out of the range of 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+        } else if (error.request) {
+            // The request was made, but no response was received
+            console.log(error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+        }
+    }
+};
+
+const handleSubmit = async () => {
+    try {
+        await form.post('/students');
+    } catch (error) {
+        console.log(error.message);
+        // Add user feedback for error
+    }
+};
 </script>
 
 <template>
@@ -23,7 +75,7 @@ defineProps({
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-12 lg:gap-x-5">
                 <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-12">
-                    <form>
+                    <form @submit.prevent="handleSubmit">
                         <div class="shadow sm:rounded-md sm:overflow-hidden">
                             <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
                                 <div>
@@ -39,6 +91,7 @@ defineProps({
                                     <div class="col-span-6 sm:col-span-3">
                                         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                                         <input
+                                            v-model="form.name"
                                             type="text"
                                             id="name"
                                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -55,6 +108,7 @@ defineProps({
                                             Email Address
                                         </label>
                                         <input
+                                            v-model="form.email"
                                             type="email"
                                             id="email"
                                             autocomplete="email"
@@ -76,6 +130,7 @@ defineProps({
                                             >Class</label
                                         >
                                         <select
+                                            v-model="form.class_id"
                                             id="class_id"
                                             class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                             :class="{
@@ -95,6 +150,7 @@ defineProps({
                                             Section
                                         </label>
                                         <select
+                                            v-model="form.section_id"
                                             id="section_id"
                                             class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                             :class="{
@@ -103,7 +159,9 @@ defineProps({
                                             }"
                                         >
                                             <option value="">Select a Section</option>
-                                            <option>option</option>
+                                            <option v-for="section in sections.data" :key="section.id" :value="section.id">
+                                                {{ section.name }}
+                                            </option>
                                         </select>
                                         
                                     </div>

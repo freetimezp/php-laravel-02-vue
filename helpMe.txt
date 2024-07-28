@@ -9,3 +9,4 @@ php artisan make:model Student -m // create Model Student
 php artisan make:factory ClassesFactory
 php artisan make:factory SectionFactory
 php artisan make:factory StudentFactory
+https://www.youtube.com/watch?v=qSC_Cb2LhKE
