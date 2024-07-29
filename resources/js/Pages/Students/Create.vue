@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 import axios from '@/axios'; // Assuming you have an axios.js file as shown above
+import InputError from '@/Components/InputError.vue';
 
 defineProps({
     classes: {        
@@ -52,13 +53,8 @@ const getSections = async (class_id) => {
     }
 };
 
-const handleSubmit = async () => {
-    try {
-        await form.post('/students');
-    } catch (error) {
-        console.log(error.message);
-        // Add user feedback for error
-    }
+const createStudent = () => {
+    form.post(route('students.store'));
 };
 </script>
 
@@ -75,7 +71,7 @@ const handleSubmit = async () => {
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-12 lg:gap-x-5">
                 <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-12">
-                    <form @submit.prevent="handleSubmit">
+                    <form @submit.prevent="createStudent">
                         <div class="shadow sm:rounded-md sm:overflow-hidden">
                             <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
                                 <div>
@@ -89,18 +85,23 @@ const handleSubmit = async () => {
 
                                 <div class="grid grid-cols-6 gap-6">
                                     <div class="col-span-6 sm:col-span-3">
-                                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                                        <label for="name" class="block text-sm font-medium text-gray-700">
+                                            Name
+                                        </label>
+
                                         <input
                                             v-model="form.name"
                                             type="text"
                                             id="name"
-                                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm 
+                                                py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 
+                                                sm:text-sm"
                                             :class="{
                                                 'text-red-900 focus:ring-red-500 focus:border-red-500 border-red-300':
-                                                    true,
+                                                form.errors.name,
                                             }"
                                         />
-                                        
+                                        <InputError :message="form.errors.name" class="mt-2" />
                                     </div>
 
                                     <div class="col-span-6 sm:col-span-3">
@@ -117,10 +118,10 @@ const handleSubmit = async () => {
                                             focus:border-indigo-500 sm:text-sm"
                                             :class="{
                                                 'text-red-900 focus:ring-red-500 focus:border-red-500 border-red-300':
-                                                    true,
+                                                form.errors.email,
                                             }"
                                         />
-                                        
+                                        <InputError :message="form.errors.email" class="mt-2" />
                                     </div>
 
                                     <div class="col-span-6 sm:col-span-3">
@@ -135,14 +136,15 @@ const handleSubmit = async () => {
                                             class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                             :class="{
                                                 'text-red-900 focus:ring-red-500 focus:border-red-500 border-red-300':
-                                                    true,
+                                                form.errors.class_id,
                                             }"
                                         >
                                             <option value="">Select a Class</option>
                                             <option v-for="item in classes.data" :key="item.id" :value="item.id">
                                                 {{ item.name }}
                                             </option>
-                                        </select>                                    
+                                        </select>   
+                                        <InputError :message="form.errors.class_id" class="mt-2" />                          
                                     </div>
 
                                     <div class="col-span-6 sm:col-span-3">
@@ -155,7 +157,7 @@ const handleSubmit = async () => {
                                             class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                             :class="{
                                                 'text-red-900 focus:ring-red-500 focus:border-red-500 border-red-300':
-                                                    true,
+                                                form.errors.section_id,
                                             }"
                                         >
                                             <option value="">Select a Section</option>
@@ -163,7 +165,7 @@ const handleSubmit = async () => {
                                                 {{ section.name }}
                                             </option>
                                         </select>
-                                        
+                                        <InputError :message="form.errors.section_id" class="mt-2" />                          
                                     </div>
                                 </div>
                             </div>
