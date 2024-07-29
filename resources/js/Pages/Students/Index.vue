@@ -130,9 +130,10 @@ defineProps({
 
                                                 <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm 
                                                         font-medium sm:pr-6">
-                                                    <button class="text-indigo-600 inline hover:text-indigo-900">
+                                                    <Link :href="route('students.edit', student.id)" 
+                                                        class="text-indigo-600 inline hover:text-indigo-900">
                                                         Edit
-                                                    </button>
+                                                    </Link>
                                                     <button class="ml-2 text-indigo-600 inline hover:text-indigo-900">
                                                         Delete
                                                     </button>
