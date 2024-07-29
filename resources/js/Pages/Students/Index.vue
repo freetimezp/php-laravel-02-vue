@@ -2,14 +2,22 @@
 import MagnifyingGlass from "@/Components/Icons/MagnifyingGlass.vue";
 import Pagination from "@/Components/Pagination.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 
 defineProps({
     students: {
         type: Object,
         required: true
     }
-})
+});
+
+const deleteForm = useForm({});
+
+const deleteStudent = (studentId) => {
+    if(confirm("Are you sure you want to delete this student?")) {
+        deleteForm.delete(route('students.destroy', studentId));
+    }
+}
 </script>
 
 <template>
@@ -130,11 +138,16 @@ defineProps({
 
                                                 <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm 
                                                         font-medium sm:pr-6">
-                                                    <Link :href="route('students.edit', student.id)" 
-                                                        class="text-indigo-600 inline hover:text-indigo-900">
+                                                    <Link 
+                                                        :href="route('students.edit', student.id)" 
+                                                        class="text-indigo-600 inline hover:text-indigo-900"
+                                                    >
                                                         Edit
                                                     </Link>
-                                                    <button class="ml-2 text-indigo-600 inline hover:text-indigo-900">
+                                                    <button
+                                                        @click="deleteStudent(student.id)" 
+                                                        class="ml-2 text-indigo-600 inline hover:text-indigo-900"
+                                                    >
                                                         Delete
                                                     </button>
                                                 </td>
