@@ -6,16 +6,20 @@ defineProps({
         type: Object,
         required: true,
     },
+    updatePageNumber: {
+        type: Function,
+        required: true,
+    }
 });
 
-const updatePageNumber = (link) => {
-    let pageNumber = link.url.split("=")[1];
+// const updatePageNumber = (link) => {
+//     let pageNumber = link.url.split("=")[1];
 
-    //console.log(link.url.split("=")[0]);
-    router.visit(link.url.split("=")[0] + `=` + pageNumber, {
-        preserveScroll: true,
-    });
-}
+//     //console.log(link.url.split("=")[0]);
+//     router.visit(link.url.split("=")[0] + `=` + pageNumber, {
+//         preserveScroll: true,
+//     });
+// }
 
 </script>
 

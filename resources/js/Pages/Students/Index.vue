@@ -13,7 +13,6 @@ defineProps({
 });
 
 
-
 let search = ref(usePage().props.search);
 let pageNumber = ref(1);
 let studentsUrl = computed(() => {
@@ -39,6 +38,16 @@ watch(
     }
 );
 
+watch(
+    () => search.value,
+    (value) => {
+        //console.log(value);
+        if(value) {
+            pageNumber.value = 1;
+        }
+    }
+);
+
 const deleteForm = useForm({});
 
 const deleteStudent = (studentId) => {
@@ -46,6 +55,11 @@ const deleteStudent = (studentId) => {
         deleteForm.delete(route('students.destroy', studentId));
     }
 }
+
+const updatePageNumber = (link) => {
+    pageNumber.value = link.url.split("=")[1];
+}
+
 </script>
 
 <template>
@@ -188,7 +202,7 @@ const deleteStudent = (studentId) => {
                                     </table>
                                 </div>
 
-                                <Pagination :data="students" />
+                                <Pagination :data="students" :updatePageNumber="updatePageNumber" />
                             </div>
                         </div>
                     </div>
