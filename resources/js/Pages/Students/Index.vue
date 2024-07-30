@@ -9,11 +9,16 @@ defineProps({
     students: {
         type: Object,
         required: true
-    }
+    },
+    classes: {
+        type: Object,
+        required: true
+    },
 });
 
 
 let search = ref(usePage().props.search);
+let class_id = ref(usePage().props.class_id);
 let pageNumber = ref(1);
 let studentsUrl = computed(() => {
     let url = new URL(route("students.index"));
@@ -21,6 +26,10 @@ let studentsUrl = computed(() => {
 
     if(search.value) {
         url.searchParams.append("search", search.value);
+    }
+
+    if(class_id.value) {
+        url.searchParams.append("class_id", class_id.value);
     }
 
     return url.toString();
@@ -114,11 +123,15 @@ const updatePageNumber = (link) => {
                             />
                         </div>
 
-                        <select class="block rounded-lg border-0 py-2 ml-5 text-gray-900 ring-1 
-                            ring-inset ring-gray-200 placeholder:text-gray-400 sm:text-sm sm:leading-6">
+                        <select
+                            v-model="class_id" 
+                            class="block rounded-lg border-0 py-2 ml-5 text-gray-900 ring-1 
+                            ring-inset ring-gray-200 placeholder:text-gray-400 sm:text-sm 
+                            sm:leading-6"
+                        >
                             <option value="">Filter By Class</option>
-                            <option>
-                                Filter
+                            <option v-for="item in classes.data" :key="item.id" :value="item.id">
+                                {{ item.name }}
                             </option>
                         </select>
                     </div>
