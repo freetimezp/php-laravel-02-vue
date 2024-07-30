@@ -2,7 +2,8 @@
 import MagnifyingGlass from "@/Components/Icons/MagnifyingGlass.vue";
 import Pagination from "@/Components/Pagination.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, router, useForm, usePage } from "@inertiajs/vue3";
+import { computed, ref, watch } from "vue";
 
 defineProps({
     students: {
@@ -10,6 +11,33 @@ defineProps({
         required: true
     }
 });
+
+
+
+let search = ref(usePage().props.search);
+let pageNumber = ref(1);
+let studentsUrl = computed(() => {
+    let url = new URL(route("students.index"));
+    url.searchParams.append("page", pageNumber.value);
+
+    if(search.value) {
+        url.searchParams.append("search", search.value);
+    }
+
+    return url.toString();
+});
+
+watch(
+    () => studentsUrl.value,
+    (searchStudentsUrl) => {
+        //console.log(newValue);
+        router.visit(searchStudentsUrl, {
+            preserveScroll: true,
+            preserveState: true,
+            replace: true,
+        });
+    }
+);
 
 const deleteForm = useForm({});
 
@@ -63,9 +91,13 @@ const deleteStudent = (studentId) => {
                                 <MagnifyingGlass />
                             </div>
 
-                            <input type="text" placeholder="Search students data..." id="search" class="block rounded-lg border-0 py-2 pl-10 text-gray-900 ring-1 
+                            <input
+                                v-model="search" 
+                                type="text" placeholder="Search students data..." id="search" 
+                                class="block rounded-lg border-0 py-2 pl-10 text-gray-900 ring-1 
                                 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 
-                                focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                            />
                         </div>
 
                         <select class="block rounded-lg border-0 py-2 ml-5 text-gray-900 ring-1 
